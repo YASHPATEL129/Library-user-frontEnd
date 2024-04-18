@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+      s
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="/css/nice-select.css" type="text/css" />
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="/css/subscription.css" type="text/css" />
+  </head>
+
+  <body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+      <div class="loader"></div>
+    </div>
+
+    <%- include('header', { showSearchBar: showSearchBar }) %>
+    <input type="hidden" value="<%= bookId %>" id="bookId" />
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-md-6"
+          style="margin-top: 20px; max-width: 40% !important"
+        >
+          <ul id="bookDetailsList" class="list-group">
+            <li class="list-group-item">
+              Title: <span class="float-right"></span>
+            </li>
+            <li class="list-group-item">
+              Description: <span class="float-right"></span>
+            </li>
+            <li class="list-group-item">
+              Pages: <span class="float-right"></span>
+            </li>
+            <li class="list-group-item">
+              ISBN: <span class="float-right"></span>
+            </li>
+            <li class="list-group-item">
+              Publisher: <span class="float-right"></span>
+            </li>
+            <li class="list-group-item">
+              Author: <span class="float-right"></span>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="col-md-11"
+          style="margin-top: -20px; max-width: 60% !important"
+        >
+          <div
+            id="pdfviewer"
+            class="d-flex justify-content-center align-items-center flex-column"
+          >
+            <iframe
+              id="pdfIframe"
+              class="w-100"
+              height="600px"
+              frameborder="0"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Section Begin -->
+    <%- include('footer') %>
+    <!-- Footer Section End -->
+    <script>
+      checkTokenAndRedirectToLogin();
+      var bookId = $("#bookId").val();
+      function loadData(bookId) {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const deviceToken = sessionStorage.getItem("deviceToken");
+        const deviceType = sessionStorage.getItem("deviceType");
+
+        const headers = {
+          // 'Content-Type': 'application/json',
+          "access-token": accessToken,
+          "device-type": deviceType,
+          "device-token": deviceToken,
+        };
+
+        function fetchAndDisplayPDF(fileName) {
+          $.ajax({
+            type: "GET",
+            url: "/pdf/download/" + fileName,
+            crossDomain: true,
+            headers: headers,
+            xhrFields: {
+              responseType: "arraybuffer", // Set the response type to 'arraybuffer'
+            },
+            success: function (data, status, jqXHR) {
+              var blob = new Blob([data], { type: "application/pdf" });
+              var pdfUrl = URL.createObjectURL(blob);
+              console.log(pdfUrl);
+              // Set the src of the iframe to the object URL
+              $("#pdfIframe").attr("src", pdfUrl + "#toolbar=0&scrollbar=0");
+            },
+          });
+        }
+
+        $.ajax({
+          url: `/readBook/` + bookId, // Replace with your Spring Boot API endpoint
+          method: "GET",
+          dataType: "json",
+          headers: headers,
+          success: function (data, status, jqXHR) {
+            document.title = data.data.title;
+
+            $(document).ready(function () {
+              $("#bookDetailsList li:nth-child(1) span").text(data.data.title);
+              $("#bookDetailsList li:nth-child(2) span").text(
+                data.data.description
+              );
+              $("#bookDetailsList li:nth-child(3) span").text(data.data.pages);
+              $("#bookDetailsList li:nth-child(4) span").text(data.data.isbn);
+              $("#bookDetailsList li:nth-child(5) span").text(
+                data.data.publisher
+              );
+              $("#bookDetailsList li:nth-child(6) span").text(data.data.author);
+            });
+            console.log(data.data);
+            if (data.data.isPrime === false || data.data.isPrimeValue === 1) {
+              fetchAndDisplayPDF(data.data.file);
+            } else {
+              window.location.href = "/subscription";
+            }
+          },
+          error: function (error) {
+            console.error("Error fetching student data:", error);
+          },
+        });
+      }
+      loadData(bookId);
+    </script>
+  </body>
+</html>

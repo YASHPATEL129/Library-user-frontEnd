@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Male_Fashion Template" />
+    <meta name="keywords" content="Male_Fashion, unica, creative, html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Book Details</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="/css/nice-select.css" type="text/css" />
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+  </head>
+
+  <body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+      <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <%- include('header', { showSearchBar: showSearchBar }) %>
+    <!-- Header Section End -->
+
+    <!-- Shop Details Section Begin -->
+    <section class="shop-details">
+      <div class="image-container">
+        <img src="/download/<%= book.cover %>" alt="<%= book.description %>" />
+      </div>
+
+      <div class="product__details__content">
+        <div class="container">
+          <div class="row d-flex justify-content-center">
+            <div class="col-lg-8">
+              <div class="product__details__text">
+                <h4><%= book.title %></h4>
+
+                <div class="product__details__cart__option">
+                  <button
+                    href=""
+                    class="primary-btn"
+                    id="readNowBtn"
+                    onclick="handleReadNowButtonClick('<%= book.bookId %>')"
+                  >
+                    Read Now
+                  </button>
+                </div>
+
+                <div class="product__details__last__option">
+                  <ul style="margin: 10px 0px 10px 0px">
+                    <li><span>Description:</span> <%= book.description %></li>
+                    <li><span>Categories:</span> <%= book.category %></li>
+                    <li><span>Pages:</span> <%= book.pages %></li>
+                    <li><span>Isbn:</span> <%= book.isbn %></li>
+                    <li><span>Publisher:</span> <%= book.publisher %></li>
+                    <li><span>Author:</span> <%= book.author %></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Shop Details Section End -->
+
+    <!-- Footer Section Begin -->
+    <%- include('footer') %>
+    <!-- Footer Section End -->
+  </body>
+</html>

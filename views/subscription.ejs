@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subscription</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+      s
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css" />
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/subscription.css" type="text/css" />
+  </head>
+  <body>
+    <div id="preloder">
+      <div class="loader"></div>
+    </div>
+    <%- include('header', { showSearchBar: showSearchBar }) %>
+
+    <section
+      id="pricing"
+      class="pricing-content section-padding"
+      style="margin-bottom: 40px !important"
+    >
+      <div class="container">
+        <div class="section-title text-center">
+          <h2>Pick your plan</h2>
+        </div>
+        <div class="row text-center">
+          <% plans.forEach(plan => { %>
+          <div
+            class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp"
+            data-wow-duration="1s"
+            data-wow-delay="0.1s"
+            data-wow-offset="0"
+            style="
+              visibility: visible;
+              animation-duration: 1s;
+              animation-delay: 0.1s;
+              animation-name: fadeInUp;
+            "
+          >
+            <div class="pricing_design">
+              <div class="single-pricing">
+                <div class="price-head" style="height: 190px;">
+                  <h2><%= plan.months %> MONTH</h2>
+                  <hr>
+                  <h1>&#8377 <%= plan.amount %></h1>
+                  <span>/Month</span>
+                </div>
+                <ul>
+                  <li>(per month  &#8377 <%= plan.pricePerMonth %>)</li>
+                </ul>
+                <button  onclick="paymentStart('<%= plan.planId %>')" class="price_btn" style="  border: none;
+                  outline: none;">Order Now</button>
+                <ul>
+                  <li style="letter-spacing: 6px;"><%= plan.planTypes %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+          <!--- END COL -->
+        </div>
+        <!--- END ROW -->
+      </div>
+      <!--- END CONTAINER -->
+    </section>
+    <%- include('footer') %>
+    
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="/js/tokenChecker.js"></script>
+
+    <script>
+      const accessToken = sessionStorage.getItem('accessToken');
+      const deviceToken = sessionStorage.getItem('deviceToken');
+      const deviceType = sessionStorage.getItem('deviceType');
+
+      const headers = {
+        // 'Content-Type': 'application/json',
+      "access-token": accessToken,
+      "device-type": deviceType,
+      "device-token": deviceToken
+    };
+      const paymentStart = (planId) => { 
+
+        checkTokenAndRedirectToLogin();
+      $.ajax({
+          url: "/createOrder",
+          type: 'post',
+          data: JSON.stringify({ plan_id: planId }),
+          contentType: "application/json; charset=utf-8",
+          headers: headers,
+          crossDomain: true,
+          dataType: "json",
+          success: function (data, status, jqXHR){
+            //invoked where success
+          
+            if (data.data.status == "created") {
+
+              // open payment form
+              let option = {
+                key: "rzp_test_nylNXmbuy0WKnz",
+                amount: data.data.amount,
+                plan_id: planId,
+                name: "Library",
+                description: "Thank You",
+                order_id: data.data.id,
+                handler: function (response) {
+                  updatePaymentOnServer(
+                    response.razorpay_payment_id,
+                    response.razorpay_order_id,
+                    response.razorpay_signature
+                  );
+                },
+                prefill: {
+                  name: "",
+                  email: "",
+                  contact: "",
+                },
+                theme: {
+                  color: "#3399cc",
+                },
+              };
+
+              let rzp = new Razorpay(option);
+              rzp.on("payment.failed", function (response) {
+                console.log("ERROR RESP:: ", response);
+                console.log(response.error.metadata.order_id);
+                console.log(response.error.metadata.payment_id);
+                updatePaymentOnServer(
+                  response.error.metadata.payment_id,
+                  response.error.metadata.order_id,
+                  null
+                );
+
+                alert("Oops payment failed !!");
+                swal("Failed !!", "Oops payment failed !!", "error");
+              });
+              
+              rzp.open();
+             
+            }
+          },
+          error: function (error) {
+            //invoked when error
+            console.log(error);
+            alert("something went wrong !!");
+          },
+        });
+      }
+
+      function updatePaymentOnServer(payment_id, order_id, razorpay_signature) {
+        $.ajax({
+          url: "/updateOrder",
+          data: JSON.stringify({
+            payment_id: payment_id,
+            order_id: order_id,
+            razorpay_signature: razorpay_signature,
+          }),
+          contentType: "application/json; charset=utf-8",
+          type: "POST",
+          headers: headers,
+          crossDomain: true,
+          dataType: "json",
+          success: function (data, status, jqXHR) {
+            console.log(data.data.data.status);
+            if (data.data.data.status == true) {
+              swal("Good job!", "congrats !! Payment successful", "success");
+            } else {
+              swal("Failed !!", "Oops payment failed !!", "error");
+            }
+          },
+          error: function (error) {
+            swal(
+              "Failed !!",
+              "Your payment is successful,but we did not get server, we will contact you as soon as posible",
+              "error"
+            );
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

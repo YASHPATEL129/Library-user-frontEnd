@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile</title>
+
+    <!-- Css Styles -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+      s
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css"
+    />
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css" />
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/myProfile.css" type="text/css" />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
+  </head>
+  <body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+      <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <%- include('header', { showSearchBar: showSearchBar }) %>
+    <!-- Header Section End -->
+
+    <div class="container">
+      <div class="col-sm-8 col-sm-offset-2" style="max-width: 100% !important">
+        <div class="panel panel-white profile-widget">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="image-container bg2">
+                <img src="image/user.png" class="avatar" alt="avatar" />
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="details">
+                <h4><i class="fa fa-sheild"></i></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="panel panel-white border-top-green">
+              <div class="panel-heading">
+                <h3 class="panel-title">Details</h3>
+              </div>
+              <div class="panel-body">
+                <div class="body-section">
+                  <h5 class="section-heading">Username</h5>
+                  <p class="section-content" data-field="username"></p>
+                </div>
+                <div class="body-section">
+                  <h5 class="section-heading">Firstname</h5>
+                  <p class="section-content" data-field="firstname"></p>
+                </div>
+                <div class="body-section">
+                  <h5 class="section-heading">Lastname</h5>
+                  <p class="section-content" data-field="lastname"></p>
+                </div>
+                <div class="body-section">
+                  <h5 class="section-heading">Contact</h5>
+                  <p class="section-content" data-field="contact"></p>
+                </div>
+                <div class="body-section">
+                  <h5 class="section-heading">Email</h5>
+                  <p class="section-content" data-field="email"></p>
+                </div>
+
+                <div class="body-section">
+                  <a
+                    class="edit-button btn btn-info btn-sm"
+                    style="margin-left: 10px"
+                    href="#"
+                    >Edit</a
+                  >
+                </div>
+                <div class="body-section">
+                  <a
+                    href="#"
+                    class="edit-button-password btn-sm btn btn-info"
+                    style="margin-left: 10px"
+                    >Change Password</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="panel panel-white border-top-purple"
+              style="height: 510px"
+            >
+              <div class="panel-heading">
+                <h3 class="panel-title">Transactions Details</h3>
+              </div>
+              <table id="paymentTable" border="1">
+                <thead>
+                  <tr>
+                    <th>Plan Name</th>
+                    <th>Payment Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Order ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table rows will be dynamically added here using JavaScript/jQuery -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="panel panel-white border-top-green">
+              <div class="panel-heading">
+                <h3 class="panel-title">My Plan</h3>
+              </div>
+              <div class="panel-body">
+                <div class="body-section">
+                  <h5 class="section-heading">
+                    Current Plan: <span id="currentPlan"></span>
+                  </h5>
+                </div>
+                <div class="body-section">
+                  <a
+                    href="/subscription"
+                    class="btn btn-info btn-sm"
+                    style="margin-left: 10px"
+                    >Upgrade Plan</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="panel panel-white border-top-purple"
+              style="height: 510px"
+            >
+              <div class="panel-heading">
+                <h3 class="panel-title">Upcoming Plans</h3>
+                <table id="upcomingTable" border="1">
+                  <thead>
+                    <tr>
+                      <th>Plan Name</th>
+                      <th>Staring Date</th>
+                      <th>Ending Date</th>
+                      <th>Order ID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Table rows will be dynamically added here using JavaScript/jQuery -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div
+              class="panel panel-white border-top-purple"
+              style="height: 320px"
+            >
+              <div class="panel-heading">
+                <h3 class="panel-title">Expired Plans</h3>
+                <table id="expiryTable" border="1">
+                  <thead>
+                    <tr>
+                      <th>Plan Name</th>
+                      <th>Staring Date</th>
+                      <th>Ending Date</th>
+                      <th>Order ID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Table rows will be dynamically added here using JavaScript/jQuery -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body-section text-center">
+      <a href="#" class="logout-button" id="logout-button">Log out</a>
+    </div>
+    <div
+      class="modal fade"
+      id="editUserModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="editStudentModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editStudentModalLabel">
+              Edit User Details
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form id="editUserForm">
+              <input type="hidden" id="dataId" />
+              <!-- Editable Fields -->
+              <div class="form-group">
+                <label for="editName">Firstname</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editFirstName"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editEmail">Lastname</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="editLastName"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editContact">Contact</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="editContact"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              id="edit-close-button"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="saveEditedUser">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="changePasswordModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="changePasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changePasswordModalLabel">
+              Change Password
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form id="changePasswordForm">
+              <input type="hidden" id="userId" />
+              <!-- Editable Fields -->
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="currentPassword"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPassword"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="savePasswordChanges"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <%- include('footer') %>
+    <!-- Header Section End -->
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"
+    ></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+      const accessToken = sessionStorage.getItem("accessToken");
+      const deviceToken = sessionStorage.getItem("deviceToken");
+      const deviceType = sessionStorage.getItem("deviceType");
+
+      const headers = {
+        // 'Content-Type': 'application/json',
+        "access-token": accessToken,
+        "device-type": deviceType,
+        "device-token": deviceToken,
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Make an AJAX request to the /myprofileLoad endpoint
+        checkTokenAndRedirectToLogin();
+
+        function fetchAndPopulateUserDetails() {
+          $.ajax({
+            url: "/myprofileLoad", // Assuming this is the route in your Node.js application
+            type: "GET",
+            headers: headers,
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            dataType: "json",
+            success: function (data, status, jqXHR) {
+              validateRep(data);
+              // Handle the successful response here
+              $(".details h4").html(
+                data.data.firstName +
+                  " " +
+                  data.data.lastName +
+                  '<i class="fa fa-sheild"></i>'
+              );
+              $('.section-content[data-field="username"]').text(
+                data.data.userName
+              );
+              $('.section-content[data-field="firstname"]').text(
+                data.data.firstName
+              );
+              $('.section-content[data-field="lastname"]').text(
+                data.data.lastName
+              );
+              $('.section-content[data-field="contact"]').text(
+                data.data.contact
+              );
+              $('.section-content[data-field="email"]').text(data.data.email);
+
+              $("#currentPlan").text(data.data.planName);
+            },
+          });
+        }
+
+        fetchAndPopulateUserDetails();
+
+        function openEditModal() {
+          // AJAX request to fetch accountant data
+
+          $.ajax({
+            url: `/myprofileLoad`, // Replace with your Spring Boot API endpoint
+            method: "GET",
+            dataType: "json",
+            headers: headers,
+            success: function (data, status, jqXHR) {
+              // Populate the modal fields with accountant data
+              $("#editFirstName").val(data.data.firstName);
+              $("#editLastName").val(data.data.lastName);
+              $("#editContact").val(data.data.contact);
+
+              // Open the modal
+              $("#editUserModal").modal("show");
+            },
+            error: function (error) {
+              console.error("Error fetching student data:", error);
+            },
+          });
+        }
+
+        $(document).on("click", ".edit-button", function () {
+          openEditModal();
+        });
+
+        $(document).on("click", "#edit-close-button", function () {
+          $("#editUserModal").modal("hide");
+        });
+
+        function saveEditedUser() {
+          const editedUser = {
+            firstName: $("#editFirstName").val(),
+            lastName: $("#editLastName").val(),
+            contact: $("#editContact").val(),
+          };
+
+          if (!editedUser.firstName) {
+            alert("Required!!");
+            return;
+          }
+          if (!editedUser.lastName) {
+            alert("Required!!");
+            return;
+          }
+
+          if (!editedUser.contact) {
+            alert("Required!!");
+            return;
+          }
+
+          // AJAX request to update accountant data
+          $.ajax({
+            url: `/changeInfo`, // Replace with your Spring Boot API endpoint for updating
+            method: "PUT",
+            dataType: "json",
+            contentType: "application/json",
+            headers: headers,
+            data: JSON.stringify(editedUser),
+            success: function (data) {
+              // Close the modal after successfully updating
+              $("#editUserModal").modal("hide");
+              swal("Success!", "Change successfully", "success");
+              fetchAndPopulateUserDetails();
+            },
+            error: function (error) {
+              console.error("Error updating student data:", error);
+            },
+          });
+        }
+
+        // When the "Save Changes" button is clicked
+        $("#saveEditedUser").click(function () {
+          saveEditedUser();
+        });
+
+        //Password
+
+        $(document).on("click", ".edit-button-password", function () {
+          $("#changePasswordModal").modal("show");
+        });
+
+        $(document).ready(function () {
+          $("#changePasswordModal").on("hidden.bs.modal", function () {
+            // Reset input fields
+            $("#currentPassword").val(""); // Clear current password input
+            $("#newPassword").val(""); // Clear new password input
+          });
+        });
+
+        function saveEditedPassword() {
+          const editedPassword = {
+            currentPassword: $("#currentPassword").val(),
+            newPassword: $("#newPassword").val(),
+          };
+
+          if (!editedPassword.currentPassword) {
+            alert("Required!!");
+            return;
+          }
+
+          if (!editedPassword.newPassword) {
+            alert("Required!!");
+            return;
+          }
+
+          // AJAX request to update accountant data
+          $.ajax({
+            url: `/changePassword`, // Replace with your Spring Boot API endpoint for updating
+            method: "PUT",
+            dataType: "json",
+            contentType: "application/json",
+            headers: headers,
+            data: JSON.stringify(editedPassword),
+            success: function (data, status) {
+              console.log(status);
+              if (data.data.error === "SAME_PASSWORD") {
+                toastr.error(data.data.message);
+              }
+              if (data.data.error === "INCORRECT_CURRENT_PASSWORD") {
+                toastr.error(data.data.message);
+              }
+              if (data.status == "200") {
+                $("#currentPassword").val("");
+                $("#newPassword").val("");
+                setTimeout(function () {
+                  $("#changePasswordModal").modal("hide");
+                }, 100);
+                toastr.success("Password changed successfully");
+              }
+            },
+            error: function (error) {
+              console.error("Error updating student data:", error);
+            },
+          });
+        }
+
+        // When the "Save Changes" button is clicked
+        $("#savePasswordChanges").click(function () {
+          saveEditedPassword();
+        });
+
+        // TRA
+        $("#paymentTable").DataTable({
+          ajax: {
+            url: "/transactions",
+            headers: headers, // Assuming headers variable is defined elsewhere
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            dataSrc: "data", // Assuming the array of transactions is nested under 'data' property in the response
+          },
+          columns: [
+            { data: "plan_name", title: "Plan Name", width: "100px" },
+            { data: "payment_date", title: "Payment Date", width: "120px" },
+            { data: "status", title: "Status", width: "100px" },
+            { data: "amount", title: "Amount", width: "100px" },
+            { data: "order_id", title: "Order ID", width: "100px" },
+          ],
+          ordering: false,
+          scrollX: true, // Enable horizontal scrolling
+          scrollY: "300px", // Enable vertical scrolling with a height of 300 pixels
+          scrollCollapse: true, // Enable collapsing the table when vertical scroll is active
+          searching: false,
+          error: function (jqXHR, status, error) {
+            console.error("Error:", error);
+          },
+        });
+
+        function fetchData(isStatus, tableId) {
+          $.ajax({
+            type: "GET",
+            url: "/user/plan/" + isStatus,
+            headers: headers, // Assuming headers variable is defined elsewhere
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+              // Initialize DataTable for the specified tableId
+              $("#" + tableId).DataTable({
+                data: data.data,
+
+                columns: [
+                  { data: "plan_name", title: "Plan Name", width: "100px" },
+                  { data: "order_id", title: "Order ID", width: "100px" },
+                  {
+                    data: "starting_date",
+                    title: "Start Date",
+                    width: "120px",
+                  },
+                  { data: "ending_date", title: "End Date", width: "120px" },
+                ],
+                ordering: false,
+                scrollX: true, // Enable horizontal scrolling
+                scrollY: "300px", // Enable vertical scrolling with a height of 300 pixels
+                scrollCollapse: true, // Enable collapsing the table when vertical scroll is active
+                searching: false,
+              });
+            },
+            error: function (jqXHR, status, error) {
+              console.error("Error:", error);
+            },
+          });
+        }
+
+        // Call fetchData function for expiry table
+        fetchData("EXPIRY", "expiryTable");
+
+        // Call fetchData function for upcoming table
+        fetchData("UPCOMING", "upcomingTable");
+
+        const logoutButton = document.getElementById("logout-button");
+        // Add a click event listener to the logout button
+        logoutButton.addEventListener("click", () => {
+          // Remove the stored email from local storage
+          sessionStorage.removeItem("email");
+          sessionStorage.removeItem("accessToken");
+          sessionStorage.removeItem("deviceToken");
+          sessionStorage.removeItem("deviceType");
+          // Redirect to the login page or any other desired page
+          window.location.href = "/home"; // Redirect to the login page (adjust the URL as needed)
+        });
+      });
+    </script>
+    <!-- <script src="/js/myprofileLoad.js"></script> -->
+  </body>
+</html>
